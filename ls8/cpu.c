@@ -58,6 +58,13 @@ void cpu_run(struct cpu *cpu)
   int running = 1; // True until we get a HLT instruction
 
   while (running) {
+    unsigned char ir = cpu_ram_read(cpu, cpu->pc);
+    int operands = (ir >> 6) + 1;
+    unsigned char operand1 = cpu_ram_read(cpu, cpu->pc+1);
+    unsigned char operand2 = cpu_ram_read(cpu, cpu->pc+2);
+    int v;
+    switch (ir) {
+    }
     // TODO
     // 1. Get the value of the current instruction (in address PC).
     // 2. Figure out how many operands this next instruction requires
