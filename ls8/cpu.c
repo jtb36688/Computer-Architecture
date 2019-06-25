@@ -64,6 +64,11 @@ void cpu_run(struct cpu *cpu)
     unsigned char operand2 = cpu_ram_read(cpu, cpu->pc+2);
     int v;
     switch (ir) {
+      case HLT:
+        running = 0;
+        break;
+      default:
+        printf("Unknown instruction %02x at %02x\n", ir, pc);
     }
     // TODO
     // 1. Get the value of the current instruction (in address PC).
