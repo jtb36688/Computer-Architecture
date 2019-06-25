@@ -1,4 +1,6 @@
 #include "cpu.h"
+#include <stdio.h>
+#include <stdlib.h>
 
 #define DATA_LEN 6
 
@@ -67,8 +69,10 @@ void cpu_run(struct cpu *cpu)
       case HLT:
         running = 0;
         break;
+      
       default:
         printf("Unknown instruction %02x at %02x\n", ir, pc);
+        exit(1);
     }
     // TODO
     // 1. Get the value of the current instruction (in address PC).
