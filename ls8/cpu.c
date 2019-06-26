@@ -61,31 +61,30 @@ void cpu_run(struct cpu *cpu)
 
   while (running) {
     unsigned char ir = cpu_ram_read(cpu, cpu->pc);
-    int operands = (ir >> 6) + 1;
     unsigned char operand1 = cpu_ram_read(cpu, cpu->pc+1);
     unsigned char operand2 = cpu_ram_read(cpu, cpu->pc+2);
+    int num_increments = (ir >> 6) + 1;
     int v;
     int reg;
     switch (ir) {
       case HLT:
         running = 0;
-        cpu->pc++;
         break;
       case LDI:
         reg = operand1;
         v = operand2;
         cpu->registers[reg] = v;
-        cpu->pc += 3;
         break;
       case PRN:
         reg = operand1;
         printf("%d", cpu->registers[reg]);
-        cpu->pc += 2;
         break;
       default:
         printf("Unknown instruction %02x at %02x\n", ir, pc);
         exit(1);
+      
     }
+    pc += num_increments;
     // TODO
     // 1. Get the value of the current instruction (in address PC).
     // 2. Figure out how many operands this next instruction requires
