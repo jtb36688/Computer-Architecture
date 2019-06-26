@@ -2,7 +2,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-#define DATA_LEN 6
+#define DATA_LEN 1024
 
 /**
  * Load the binary bytes from a .ls8 source file into a RAM array
@@ -18,7 +18,22 @@ fp = fopen(filename, "r");
 if (fp == NULL) {
   fprintf(stderr, "Provided filename does not exist in this directory");
 }
+
+
+while (fgets(line, DATA_LEN, fp) != NULL) {
+  char *endptr;
+  unsigned char v = strtoul(line, &endptr, 2); // cant use a pointer for 2nd arg because it would be a copy
+  //&endptr points at the actual value in memory. This converts it to base 2
+
 }
+  if (endptr == line) { // Line must have a blank, so it ignores the line
+  continue;
+  }
+  cpu->memory[address] = v;
+  address++;
+
+}
+
 
 void cpu_ram_read(struct cpu *cpu, int address)
 {
