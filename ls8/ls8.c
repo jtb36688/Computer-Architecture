@@ -16,7 +16,7 @@ int main(int argc, char *argv[])
 
 
   cpu_init(&cpu);
-  cpu_load(&cpu, argv[1}]);
+  cpu_load(&cpu, argv[1]);
   cpu_run(&cpu);
 
   return 0;

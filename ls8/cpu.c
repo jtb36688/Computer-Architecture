@@ -3,7 +3,7 @@
 #include <stdlib.h>
 
 #define DATA_LEN 1024
-#define SP 7
+#define SP cpu->registers[7]
 
 /**
  * Load the binary bytes from a .ls8 source file into a RAM array
@@ -26,7 +26,6 @@ while (fgets(line, DATA_LEN, fp) != NULL) {
   unsigned char v = strtoul(line, &endptr, 2); // cant use a pointer for 2nd arg because it would be a copy
   //&endptr points at the actual value in memory. This converts it to base 2
 
-}
   if (endptr == line) { // Line must have a blank, so it ignores the line
     continue;
   }
@@ -34,16 +33,16 @@ while (fgets(line, DATA_LEN, fp) != NULL) {
   address++;
 
 }
+}
 
-
-void cpu_ram_read(struct cpu *cpu, int address)
+unsigned char cpu_ram_read(struct cpu *cpu, int address)
 {
-  return cpu->ram[address];
+  return cpu->memory[address];
 }
 
 void cpu_ram_write(struct cpu *cpu, int address, int data)
 {
-  cpu->ram[address] = data;
+  cpu->memory[address] = data;
 }
 
 /**
@@ -77,16 +76,16 @@ void cpu_run(struct cpu *cpu)
     int reg;
     switch (ir) {
       case PUSH:
-        cpu->registers[SP]--;
+        SP--;
         reg = operand1;
         v = cpu->registers[reg];
         cpu->memory[cpu->registers[SP]] = v;
         break;
       case POP:
         reg = operand1;
-        v = cpu->memory[cpu->registers[SP]]
+        v = cpu->memory[cpu->registers[SP]];
         cpu->registers[reg] = v;
-        cpu->registers++;
+        SP++;
         break;
       case HLT:
         running = 0;
@@ -104,11 +103,13 @@ void cpu_run(struct cpu *cpu)
         alu(cpu, ALU_MUL, operand1, operand2);
         break;
       default:
-        printf("Unknown instruction %02x at %02x\n", ir, pc);
+        printf("Unknown instruction %02x at %02x\n", ir, cpu->pc);
         exit(1);
       
     }
-    pc += num_increments;
+    if (ir) {
+      cpu->pc += num_increments;
+    }
     // TODO
     // 1. Get the value of the current instruction (in address PC).
     // 2. Figure out how many operands this next instruction requires
