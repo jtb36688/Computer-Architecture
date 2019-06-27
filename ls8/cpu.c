@@ -27,7 +27,7 @@ while (fgets(line, DATA_LEN, fp) != NULL) {
 
 }
   if (endptr == line) { // Line must have a blank, so it ignores the line
-  continue;
+    continue;
   }
   cpu->memory[address] = v;
   address++;
@@ -53,6 +53,7 @@ void alu(struct cpu *cpu, enum alu_op op, unsigned char regA, unsigned char regB
   switch (op) {
     case ALU_MUL:
       // TODO
+      cpu->registers[regA] = cpu->registers[regA] * cpu->registers[regB];
       break;
 
     // TODO: implement more ALU ops
@@ -85,6 +86,9 @@ void cpu_run(struct cpu *cpu)
       case PRN:
         reg = operand1;
         printf("%d", cpu->registers[reg]);
+        break;
+      case MUL:
+        alu(cpu, ALU_MUL, operandA, operandB);
         break;
       default:
         printf("Unknown instruction %02x at %02x\n", ir, pc);
