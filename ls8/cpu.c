@@ -77,8 +77,14 @@ void cpu_run(struct cpu *cpu)
     int reg;
     switch (ir) {
       case PUSH:
+        v = operand1;
+        cpu->registers[SP]--;
+        cpu->memory[cpu->registers[SP]] = v;
         break;
       case POP:
+        reg = operand1;
+        cpu->registers[reg] = cpu->memory[cpu->registers[SP]];
+        cpu->registers++;
         break;
       case HLT:
         running = 0;
