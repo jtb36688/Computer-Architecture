@@ -3,6 +3,7 @@
 #include <stdlib.h>
 
 #define DATA_LEN 1024
+#define SP 7
 
 /**
  * Load the binary bytes from a .ls8 source file into a RAM array
@@ -75,6 +76,10 @@ void cpu_run(struct cpu *cpu)
     int v;
     int reg;
     switch (ir) {
+      case PUSH:
+        break;
+      case POP:
+        break;
       case HLT:
         running = 0;
         break;
@@ -88,7 +93,7 @@ void cpu_run(struct cpu *cpu)
         printf("%d", cpu->registers[reg]);
         break;
       case MUL:
-        alu(cpu, ALU_MUL, operandA, operandB);
+        alu(cpu, ALU_MUL, operand1, operand2);
         break;
       default:
         printf("Unknown instruction %02x at %02x\n", ir, pc);
