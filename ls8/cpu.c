@@ -74,17 +74,19 @@ void cpu_run(struct cpu *cpu)
     int num_increments = (ir >> 6) + 1;
     int v;
     int reg;
-    int retaddr;
+    unsigned char retaddr;
     switch (ir) {
       case CALL:
         retaddr = cpu->pc + 2;
         SP--;
+        reg = operand1;
         cpu->memory[cpu->registers[SP]] = retaddr;
-        reg = cpu->memory[cpu->pc + 1];
         cpu->pc = cpu->registers[reg];
         break;
       case RET:
+        reg = operand1;
         retaddr = cpu->memory[cpu->registers[SP]];
+        cpu->registers[reg] = retaddr;
         SP++;
         cpu->pc = retaddr;
         break;
@@ -120,7 +122,7 @@ void cpu_run(struct cpu *cpu)
         exit(1);
       
     }
-    if (ir) {
+    if (ir != CALL && ir != RET) {
       cpu->pc += num_increments;
     }
     // TODO
